@@ -31,7 +31,7 @@ def prepare(argv):
     # quant
     dualisto_quant = sub_parser.add_parser("quant", help="run with dualisto")
     dualisto_quant.set_defaults(func=quant.start)
-    quant.args_handle(dualisto_index)
+    quant.args_handle(dualisto_quant)
 
     if len(argv) == 1:
         print(parser.print_help())

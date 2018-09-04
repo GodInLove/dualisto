@@ -129,11 +129,20 @@ class DefArgs:
         self.output = "dualisto_out"
         self.seed = 42
         self.fna_file = "dualisto_fna_file"
+        self.fq_file_1 = "fq_file_1"
+        self.fq_file_2 = "fq_file_2"
+        self.single_mode = False
+        self.fq_file_single = "fq_file_single"
+        self.len_frag = 0.0
+        self.sd = 0.0
 
 
 transcript_info = TranscriptInfo()
 ec_map = []
 ecs_list = []
+ec_inv_dict = {}
 kmer_str_list = []
 kmer_info_list = []
 contig_list = []
+skip = 1
+counts = []
