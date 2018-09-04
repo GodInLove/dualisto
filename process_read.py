@@ -28,13 +28,16 @@ def do_something_with_record_paired(info1, info2):
     v1 = match(seq1, len(seq1), k)
     v2 = match(seq2, len(seq2), k)
     u = intersect_ecs_paired(v1, v2)
-    tl = map_pair(seq1, len(seq1), seq2, len(seq2), k)
+    if len(v1) != 0 and len(v2) != 0:
+        tl = map_pair(seq1, len(seq1), seq2, len(seq2), k)
+    else:
+        tl = -1
     return u, tl
 
 
 def convert_to_fasta(in_handle):
     for rec_id, seq, _ in FastqGeneralIterator(in_handle):
-        yield rec_id, str(Seq(seq).reverse_complement())
+        yield rec_id, str(Seq(seq))
 
 
 def to_fasta(in_handle):

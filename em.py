@@ -20,9 +20,10 @@ def compute_eff_len(tran_lens_estimated):
 
 def compute_weight_map(a_counts, eff_tran_lens):
     ec_map_len = len(ec_map)
-    weight_map = [[]] * len(ec_map)
+    weight_map = []
     for ec in range(ec_map_len):
         v_list = ec_map[ec]
+        weight_map.append([])
         for each_tran_id in v_list:
             weight_map[ec].append(a_counts[ec] / eff_tran_lens[each_tran_id])
     return weight_map
@@ -38,6 +39,11 @@ def init_alpha_list():
 def em_run(a_counts, tran_lens_estimated, max_round=10000, min_round=50, bias=0):
     eff_tran_lens = compute_eff_len(tran_lens_estimated)
     weight_map = compute_weight_map(a_counts, eff_tran_lens)
+    # for i in range(len(weight_map)):
+    #     print(i, end=",")
+    #     for j in range(len(weight_map[i])):
+    #         print(round(weight_map[i][j], 8), end=" ")
+    #     print("\n")
     alpha_list = init_alpha_list()
     next_alpha_list = [0.0] * len(alpha_list)
     alpha_limit = 1e-7
@@ -64,9 +70,9 @@ def em_run(a_counts, tran_lens_estimated, max_round=10000, min_round=50, bias=0)
                         next_alpha_list[v_list[t]] = next_alpha_list[v_list[t]] + \
                                                      (wv[t] * alpha_list[v_list[t]]) * count_normal
                 else:
-                    ec = ec + 1
+                    pass
             else:
-                ec = ec + 1
+                pass
             ec = ec + 1
         stop_em = 0
         stop_num = 0
@@ -90,6 +96,7 @@ def em_run(a_counts, tran_lens_estimated, max_round=10000, min_round=50, bias=0)
         alpha_before_zero = [0.0] * len(alpha_list)
         for ec in range(transcript_info.tran_num):
             alpha_before_zero[ec] = alpha_list[ec]
+    print("round:", i)
     return alpha_list, eff_tran_lens
 
 
@@ -104,5 +111,5 @@ def write_em_tsv(file_name, alpha_list, eff_lens):
     fp.write("tran_name\ttran_len\teff_len\tcounts" + "\n")
     for ec in range(len(alpha_list)):
         fp.write(tran_name[ec] + "\t" + str(tran_len[ec]) +
-                 "\t" + str(round(eff_lens[ec], 4)) + "\t" + str(alpha_list[ec]) + "\n")
+                 "\t" + str(round(eff_lens[ec], 4)) + "\t" + str(round(alpha_list[ec], 8)) + "\n")
     fp.close()

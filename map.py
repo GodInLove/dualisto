@@ -27,7 +27,7 @@ def compare_in_test(m, n):
         return m[0][0] - n[0][0]
 
 
-def intersect_ec_u_old(ec, u):
+def intersect_ec_u(ec, u):
     v = ec_map[ec]
     res = []
     i = 0
@@ -44,15 +44,15 @@ def intersect_ec_u_old(ec, u):
     return res
 
 
-def intersect_ec_u(ec, u):
-    res = set()
-    if ec < len(ec_map):
-        new_u = ec_map[ec]
-        for each_tran in u:
-            res.add(each_tran)
-        for each_tran in new_u:
-            res.add(each_tran)
-    return sorted(list(res))
+# def intersect_ec_u(ec, u):
+#     res = set()
+#     if ec < len(ec_map):
+#         new_u = ec_map[ec]
+#         for each_tran in u:
+#             res.add(each_tran)
+#         for each_tran in new_u:
+#             res.add(each_tran)
+#     return sorted(list(res))
 
 
 def intersect_ecs(v):
@@ -80,7 +80,7 @@ def intersect_ecs(v):
     return u
 
 
-def intersect_u1_u2_old(u1, u2):
+def intersect_u1_u2(u1, u2):
     res = []
     i = 0
     j = 0
@@ -96,13 +96,13 @@ def intersect_u1_u2_old(u1, u2):
     return res
 
 
-def intersect_u1_u2(u1, u2):
-    res = set()
-    for each_tran in u1:
-        res.add(each_tran)
-    for each_tran in u2:
-        res.add(each_tran)
-    return sorted(list(res))
+# def intersect_u1_u2(u1, u2):
+#     res = set()
+#     for each_tran in u1:
+#         res.add(each_tran)
+#     for each_tran in u2:
+#         res.add(each_tran)
+#     return sorted(list(res))
 
 
 def intersect_ecs_paired(v1, v2):
@@ -148,6 +148,7 @@ def compute_mean_flg_lens(f_lens):
     tmp_counts = [0] * f_lens_len
     tmp_mass = [0.0] * f_lens_len
     mean_f_lens = [0.0] * f_lens_len
+    tmp_counts[0] = f_lens[0]
     i = 1
     while i < f_lens_len:
         tmp_mass[i] = f_lens[i] * i + tmp_mass[i - 1]
@@ -189,9 +190,9 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
     p2 = -1
     c1 = -1
     c2 = -1
+
     found1 = 0
-    i = 0
-    while i < seq1_len - k + 1:
+    for i in range(seq1_len - k + 1):
         kit1 = seq1[i:i + k]
         kit1_rep = kmer_rep(kit1)
         if kit1_rep in kmer_str_list:
@@ -204,14 +205,15 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
             else:
                 p1 = kit1_info.pos_in_contig + k + i
                 d1 = 0
+            # print(seq1)
+            # print(kit1_info.pos_in_contig)
             break
         else:
-            i = i + 1
+            pass
     if not found1:
         return -1
     found2 = 0
-    i = 0
-    while i < seq2_len - k + 1:
+    for i in range(seq2_len - k + 1):
         kit2 = seq2[i:i + k]
         kit2_rep = kmer_rep(kit2)
         if kit2_rep in kmer_str_list:
@@ -224,9 +226,10 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
             else:
                 p2 = kit2_info.pos_in_contig + k + i
                 d2 = 0
+            # print(kit2_info.pos_in_contig)
             break
         else:
-            i = i + 1
+            pass
     if not found2:
         return -1
     if c1 != c2:
@@ -319,7 +322,8 @@ def match(curr_read, curr_read_len, k):
                 else:
                     return v
             else:
-                i = i + 1
+                pass
         else:
-            i = i + 1
+            pass
+        i = i + 1
     return v
