@@ -1,5 +1,5 @@
 from _class import program_stop, transcript_info, kmer_str_list, kmer_info_list, ec_map, contig_list, ecs_list, \
-    KmerInfo, Contig, ContigIncludeTrans
+    KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts
 from version import version
 
 
@@ -80,11 +80,12 @@ def load_idx(filename):
     transcript_info.tran_num = int(fp.readline().strip())
     transcript_info.tran_len = [0] * transcript_info.tran_num
     for i in range(transcript_info.tran_num):
-        transcript_info.tran_len = int(fp.readline().strip())
+        transcript_info.tran_len[i] = int(fp.readline().strip())
     # 4.read kmer_str_list and kmer_info_list
     kmer_str_list_len = int(fp.readline().strip())
     for i in range(kmer_str_list_len):
         kmer_str_list.append("")
+        kmer_info_list.append("")
     i = 0
     while i < kmer_str_list_len:
         kmer_str_list[i] = fp.readline().strip()
@@ -94,11 +95,14 @@ def load_idx(filename):
         kmer_info.pos_in_contig = int(curr_kmer_info[1])
         kmer_info.n_of_kmer_in_contig = int(curr_kmer_info[2])
         kmer_info.sense_in_contig = int(curr_kmer_info[3])
+        kmer_info_list[i] = kmer_info
         i = i + 1
     # 5.read num of ecs
     ec_map_len = int(fp.readline().strip())
     for i in range(ec_map_len):
         ec_map.append([])
+        ec_inv_dict[i] = []
+        counts.append(0)
     # 6.read each ecs
     i = 0
     while i < ec_map_len:
@@ -111,6 +115,7 @@ def load_idx(filename):
         while j < each_ecs_len:
             ec_map[i][j] = int(fp.readline().strip())
             j = j + 1
+        ec_inv_dict[i] = ec_map[i]
         i = i + 1
     # 7.read trans_names
     transcript_info.tran_name = [""] * transcript_info.tran_num
@@ -146,3 +151,4 @@ def load_idx(filename):
         ecs_list[i] = int(fp.readline().strip())
         i = i + 1
     fp.close()
+    return k

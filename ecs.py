@@ -1,8 +1,7 @@
 from _class import ec_map, kmer_rep, kmer_str_list, program_stop, contig_list, kmer_info_list, \
-    ContigFindTrans, kmer_twin, Contig, ecs_list, ContigIncludeTrans, KmerInfo
+    ContigFindTrans, kmer_twin, Contig, ecs_list, ContigIncludeTrans, ec_inv_dict
 
 contig_find_trans_list = []
-ec_inv_dict = {}
 
 
 def build_ecs(seqs, k):
@@ -72,13 +71,14 @@ def build_ecs(seqs, k):
             curr_contig_list.append(curr_trans_info.tran_id)
         curr_contig_list = sorted(list(set(curr_contig_list)))
         ec = -1
-        for (key, value) in ec_inv_dict.items():
-            if value == curr_contig_list:
-                ec = key
-        if ec == -1:
+        if curr_contig_list in ec_inv_dict.values():
+            for (key, value) in ec_inv_dict.items():
+                if value == curr_contig_list:
+                    ec = key
+        else:
             ec = len(ec_inv_dict)
-        ec_inv_dict[ec] = curr_contig_list
-        ec_map.append(curr_contig_list)
+            ec_inv_dict[ec] = curr_contig_list
+            ec_map.append(curr_contig_list)
         ecs_list[curr_contig_id] = ec
         contig_list[curr_contig_id].ecs_id = ec
     for i in range(len(seqs)):
