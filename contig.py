@@ -13,11 +13,13 @@ def build_dbg(seqs, k):
             curr_kmer = str(curr_kmer)
             curr_rep = kmer_rep(curr_kmer)
             tmp_kmer_map.add(curr_rep)
+
     tmp_str_map = sorted(list(tmp_kmer_map))
     for each_kmer in tmp_str_map:
         kmer_str_list.append(each_kmer)
         kmer_info = KmerInfo()
         kmer_info_list.append(kmer_info)
+
     for i in range(len(kmer_str_list)):
         curr_kmer = kmer_str_list[i]
         curr_kmer_info = kmer_info_list[i]
@@ -40,7 +42,7 @@ def build_dbg(seqs, k):
                 elif fw_step_kmer == kmer_twin(last_kmer):
                     break
                 fw_list.append(fw_step_kmer)
-                last_kmer = fw_list[-1]
+                last_kmer = fw_step_kmer
             fw_step_kmer = curr_twin
             bw_list = []
             first_kmer = curr_twin
@@ -53,7 +55,7 @@ def build_dbg(seqs, k):
                     elif fw_step_kmer == kmer_twin(first_kmer):
                         break
                     bw_list.append(fw_step_kmer)
-                    first_kmer = bw_list[-1]
+                    first_kmer = fw_step_kmer
             curr_kmer_list = []
             for bw in reversed(bw_list):
                 curr_kmer_list.append(kmer_twin(bw))
@@ -98,16 +100,14 @@ def fwstep(kmer):
             return 0
     if fw_count != 1:
         return 0
-    if sum(kmer_rep(tmp) in kmer_str_list for tmp in contig_bw(curr_fw)) != 1:
+    bw_count = sum(kmer_rep(tmp) in kmer_str_list for tmp in contig_bw(curr_fw))
+    if bw_count > 1:
         return 0
-        # 能排除CAAAA这种
-    if curr_fw == kmer:
-        # example (5,"AAAAA") (5,"TTTTT") (5,"CCCCC") (5,"GGGGG")
-        # print("t_kmer", self.tmp_kmer, "seqs:", self.seqs)
+    if bw_count != 1:
         return 0
-    if curr_fw == kmer_twin(kmer):
-        # example (5,"GGGCC") example(5,"AGATC")
-        # print("t_kmer", self.tmp_kmer, "seqs:", self.seqs)
-        return 0
-    fw_step_kmer = curr_fw
-    return 1
+    else:
+        if curr_fw != kmer:
+            fw_step_kmer = curr_fw
+            return 1
+        else:
+            return 0

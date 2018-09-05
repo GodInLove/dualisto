@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from _class import program_stop, DefArgs
@@ -32,10 +33,22 @@ def start(args):
     def_args.k = args.kmer_len
     def_args.index = index_path
     def_args.fna_file = args.input_fna_path
+    begin = datetime.datetime.now()
     seqs = read_tran_files(def_args.fna_file)
+    end = datetime.datetime.now()
+    print("read_tran:", end - begin)
+    begin = datetime.datetime.now()
     build_dbg(seqs, def_args.k)
+    end = datetime.datetime.now()
+    print("build_contig:", end - begin)
+    begin = datetime.datetime.now()
     build_ecs(seqs, def_args.k)
+    end = datetime.datetime.now()
+    print("build_ecs:", end - begin)
+    begin = datetime.datetime.now()
     write_idx(def_args.index, def_args.k)
+    end = datetime.datetime.now()
+    print("write_idx:", end - begin)
 
 
 def args_handle(dualisto_index):

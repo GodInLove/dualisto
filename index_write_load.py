@@ -1,6 +1,6 @@
 from _class import program_stop, transcript_info, kmer_str_list, kmer_info_list, ec_map, contig_list, ecs_list, \
     KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts
-from version import version
+from version import version, kallisto_index_version
 
 
 def write_idx(filename, k):
@@ -72,7 +72,7 @@ def load_idx(filename):
         program_stop("index_write_load.py")
     # 1.read version
     read_version = fp.readline().strip()
-    if read_version != version:
+    if read_version != kallisto_index_version:
         program_stop("index_write_load.py")
     # 2.read k
     k = int(fp.readline().strip())
