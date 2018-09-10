@@ -285,7 +285,7 @@ def match(curr_read, curr_read_len, k):
                     else:
                         found_middle = 0
                         if dist > 4:
-                            middle_pos = (pos + pos2) / 2
+                            middle_pos = int((pos + pos2) / 2)
                             found3pos = pos + dist
                             kit3 = curr_read[middle_pos:middle_pos + k]
                             kit3_rep = kmer_rep(kit3)
@@ -298,12 +298,20 @@ def match(curr_read, curr_read_len, k):
                                 elif middle_contig_id == kit2_info.contig_id:
                                     found_middle = 1
                                     found3pos = pos + dist
+                                else:
+                                    pass
                                 if found_middle:
                                     v.append((kit3_info, found3pos))
                                     if pos2 >= curr_read_len - k:
                                         return v
                                     else:
                                         i = pos2
+                                else:
+                                    pass
+                            else:
+                                pass
+                        else:
+                            pass
                         if not found_middle:
                             i = i + 1
                             again = 1

@@ -32,6 +32,8 @@ def do_something_with_record_paired(info1, info2):
         tl = map_pair(seq1, len(seq1), seq2, len(seq2), k)
     else:
         tl = -1
+    v1.clear()
+    v2.clear()
     return u, tl
 
 
@@ -128,11 +130,14 @@ def read_fq_fa_files(args):
                     if 0 < each_tl < len(f_lens):
                         f_lens[each_tl] = f_lens[each_tl] + 1
                         f_len_goal = f_len_goal - 1
+            res.clear()
             end = datetime.datetime.now()
             print("match_ecs:", end - begin)
             begin = datetime.datetime.now()
             mean_f_lens = compute_mean_flg_lens(f_lens)
+            f_lens.clear()
             tran_lens_estimated = get_each_tran_len(mean_f_lens)
+            mean_f_lens.clear()
             alpha_list, eff_lens = em_run(counts, tran_lens_estimated)
             output_file = os.path.join(args.output, "dualisto_quant.tsv")
             write_em_tsv(output_file, alpha_list, eff_lens)

@@ -86,6 +86,7 @@ def load_idx(filename):
         transcript_info.tran_len[i] = int(fp.readline().strip())
     # 4.read kmer_str_dict and kmer_info_list
     kmer_str_list_len = int(fp.readline().strip())
+    print("kmer_num:", kmer_str_list_len)
     for i in range(kmer_str_list_len):
         kmer_str_list.append("")
         kmer_info_list.append("")
@@ -102,8 +103,11 @@ def load_idx(filename):
         i = i + 1
     for i in range(kmer_str_list_len):
         kmer_str_dict[kmer_str_list[i]] = kmer_info_list[i]
+    kmer_str_list.clear()
+    kmer_info_list.clear()
     # 5.read num of ecs
     ec_map_len = int(fp.readline().strip())
+    print("ecs_num:", ec_map_len)
     for i in range(ec_map_len):
         ec_map.append([])
         ec_inv_dict[i] = []
@@ -128,6 +132,7 @@ def load_idx(filename):
         transcript_info.tran_name[i] = fp.readline().strip()
     # 8.read contigs
     contig_list_len = int(fp.readline().strip())
+    print("contig_num:", contig_list_len)
     for i in range(contig_list_len):
         contig_list.append(0)
         ecs_list.append(0)
