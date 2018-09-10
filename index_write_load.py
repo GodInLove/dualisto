@@ -87,11 +87,11 @@ def load_idx(filename):
     # 4.read kmer_str_dict and kmer_info_list
     kmer_str_list_len = int(fp.readline().strip())
     for i in range(kmer_str_list_len):
-        kmer_str_dict.append("")
+        kmer_str_list.append("")
         kmer_info_list.append("")
     i = 0
     while i < kmer_str_list_len:
-        kmer_str_dict[i] = fp.readline().strip()
+        kmer_str_list[i] = fp.readline().strip()
         kmer_info = KmerInfo()
         curr_kmer_info = fp.readline().strip().split(",")
         kmer_info.contig_id = int(curr_kmer_info[0])

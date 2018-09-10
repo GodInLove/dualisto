@@ -246,10 +246,10 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
 
 
 def match(curr_read, curr_read_len, k):
-    global num_read
-    num_read = num_read + 1
-    if num_read %2 == 0:
-        print(num_read)
+    # global num_read
+    # num_read = num_read + 1
+    # if num_read %2 == 0:
+    #     print(num_read)
     v = []
     i = 0
     again = 0
