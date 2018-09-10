@@ -15,7 +15,6 @@ def build_dbg(seqs, k):
             tmp_kmer_map.add(curr_rep)
 
     for each_kmer in tmp_kmer_map:
-        kmer_str_dict.append(each_kmer)
         kmer_info = KmerInfo()
         kmer_str_dict[each_kmer] = kmer_info
 
