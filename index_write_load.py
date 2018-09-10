@@ -1,5 +1,5 @@
-from _class import program_stop, transcript_info, kmer_str_list, kmer_info_list, ec_map, contig_list, ecs_list, \
-    KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts
+from _class import program_stop, transcript_info, kmer_str_dict, kmer_info_list, ec_map, contig_list, ecs_list, \
+    KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts, kmer_str_list
 from version import version, kallisto_index_version
 
 
@@ -17,7 +17,10 @@ def write_idx(filename, k):
     fp.write(str(transcript_info.tran_num) + "\n")
     for i in range(transcript_info.tran_num):
         fp.write(str(transcript_info.tran_len[i]) + "\n")
-    # 4.write kmer_str_list and kmer_info_list
+    # 4.write kmer_str_dict and kmer_info_list
+    for key in kmer_str_dict:
+        kmer_str_list.append(key)
+        kmer_info_list.append(kmer_str_dict[key])
     i = 0
     fp.write(str(len(kmer_str_list)) + "\n")
     while i < len(kmer_str_list):
@@ -81,14 +84,14 @@ def load_idx(filename):
     transcript_info.tran_len = [0] * transcript_info.tran_num
     for i in range(transcript_info.tran_num):
         transcript_info.tran_len[i] = int(fp.readline().strip())
-    # 4.read kmer_str_list and kmer_info_list
+    # 4.read kmer_str_dict and kmer_info_list
     kmer_str_list_len = int(fp.readline().strip())
     for i in range(kmer_str_list_len):
-        kmer_str_list.append("")
+        kmer_str_dict.append("")
         kmer_info_list.append("")
     i = 0
     while i < kmer_str_list_len:
-        kmer_str_list[i] = fp.readline().strip()
+        kmer_str_dict[i] = fp.readline().strip()
         kmer_info = KmerInfo()
         curr_kmer_info = fp.readline().strip().split(",")
         kmer_info.contig_id = int(curr_kmer_info[0])
@@ -97,6 +100,8 @@ def load_idx(filename):
         kmer_info.sense_in_contig = int(curr_kmer_info[3])
         kmer_info_list[i] = kmer_info
         i = i + 1
+    for i in range(kmer_str_list_len):
+        kmer_str_dict[kmer_str_list[i]] = kmer_info_list[i]
     # 5.read num of ecs
     ec_map_len = int(fp.readline().strip())
     for i in range(ec_map_len):

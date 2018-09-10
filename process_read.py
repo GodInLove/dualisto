@@ -113,6 +113,8 @@ def read_fq_fa_files(args):
             else:
                 print("cannot find .fa(.fasta) or .fq(.fastq).please check.")
                 program_stop("process_read.py")
+            fp1.close()
+            fp2.close()
             end = datetime.datetime.now()
             print("process_reads:", end - begin)
             begin = datetime.datetime.now()

@@ -1,8 +1,9 @@
 import functools
 
-from _class import kmer_str_list, kmer_rep, kmer_info_list, skip, ecs_list, ec_map, ec_inv_dict, transcript_info
+from _class import kmer_str_dict, kmer_rep, skip, ecs_list, ec_map, ec_inv_dict, transcript_info
 
 new_ecs = []
+num_read = 0
 
 
 def get_dist(is_fw, kmer_info):
@@ -195,9 +196,9 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
     for i in range(seq1_len - k + 1):
         kit1 = seq1[i:i + k]
         kit1_rep = kmer_rep(kit1)
-        if kit1_rep in kmer_str_list:
+        if kit1_rep in kmer_str_dict:
             found1 = 1
-            kit1_info = kmer_info_list[kmer_str_list.index(kit1_rep)]
+            kit1_info = kmer_str_dict[kit1_rep]
             c1 = kit1_info.contig_id
             if (kit1_rep == kit1) == kit1_info.sense_in_contig:
                 p1 = kit1_info.pos_in_contig - i
@@ -216,9 +217,9 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
     for i in range(seq2_len - k + 1):
         kit2 = seq2[i:i + k]
         kit2_rep = kmer_rep(kit2)
-        if kit2_rep in kmer_str_list:
+        if kit2_rep in kmer_str_dict:
             found2 = 1
-            kit2_info = kmer_info_list[kmer_str_list.index(kit2_rep)]
+            kit2_info = kmer_str_dict[kit2_rep]
             c2 = kit2_info.contig_id
             if (kit2_rep == kit2) == kit2_info.sense_in_contig:
                 p2 = kit2_info.pos_in_contig - i
@@ -245,14 +246,18 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
 
 
 def match(curr_read, curr_read_len, k):
+    global num_read
+    num_read = num_read + 1
+    if num_read %2 == 0:
+        print(num_read)
     v = []
     i = 0
     again = 0
     while i < curr_read_len - k + 1:
         kit = curr_read[i:i + k]
         kit_rep = kmer_rep(kit)
-        if kit_rep in kmer_str_list:
-            curr_kit_info = kmer_info_list[kmer_str_list.index(kit_rep)]
+        if kit_rep in kmer_str_dict:
+            curr_kit_info = kmer_str_dict[kit_rep]
             pos = i
             v.append((curr_kit_info, pos))
             dist = get_dist(int((kit == kit_rep)), curr_kit_info)
@@ -263,10 +268,10 @@ def match(curr_read, curr_read_len, k):
                     pos2 = curr_read_len - k
                 kit2 = curr_read[pos2:pos2 + k]
                 kit2_rep = kmer_rep(kit2)
-                if kit2_rep in kmer_str_list:
+                if kit2_rep in kmer_str_dict:
                     found2 = 0
                     found2pos = pos + dist
-                    kit2_info = kmer_info_list[kmer_str_list.index(kit2_rep)]
+                    kit2_info = kmer_str_dict[kit2_rep]
                     if curr_kit_info.contig_id == kit2_info.contig_id:
                         found2 = 1
                         found2pos = pos + dist
@@ -284,8 +289,8 @@ def match(curr_read, curr_read_len, k):
                             found3pos = pos + dist
                             kit3 = curr_read[middle_pos:middle_pos + k]
                             kit3_rep = kmer_rep(kit3)
-                            if kit3_rep in kmer_str_list:
-                                kit3_info = kmer_info_list[kmer_str_list.index(kit3_rep)]
+                            if kit3_rep in kmer_str_dict:
+                                kit3_info = kmer_str_dict[kit3_rep]
                                 middle_contig_id = kit3_info.contig_id
                                 if middle_contig_id == curr_kit_info.contig_id:
                                     found_middle = 1
@@ -311,8 +316,8 @@ def match(curr_read, curr_read_len, k):
                                     if j == 0:
                                         again_kit = curr_read[m:m + k]
                                         again_kit_rep = kmer_rep(again_kit)
-                                        if again_kit_rep in kmer_str_list:
-                                            again_kit_info = kmer_info_list[kmer_str_list.index(again_kit_rep)]
+                                        if again_kit_rep in kmer_str_dict:
+                                            again_kit_info = kmer_str_dict[again_kit_rep]
                                             v.append((again_kit_info, m))
                                     if m == pos2:
                                         again = 0
