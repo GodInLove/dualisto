@@ -1,5 +1,5 @@
-from _class import program_stop, transcript_info, kmer_str_dict, kmer_info_list, ec_map, contig_list, ecs_list, \
-    KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts, kmer_str_list
+from _class import program_stop, transcript_info, kmer_str_list, kmer_info_list, ec_map, contig_list, ecs_list, \
+    KmerInfo, Contig, ContigIncludeTrans, ec_inv_dict, counts
 from version import version, kallisto_index_version
 
 
@@ -17,10 +17,7 @@ def write_idx(filename, k):
     fp.write(str(transcript_info.tran_num) + "\n")
     for i in range(transcript_info.tran_num):
         fp.write(str(transcript_info.tran_len[i]) + "\n")
-    # 4.write kmer_str_dict and kmer_info_list
-    for key in kmer_str_dict:
-        kmer_str_list.append(key)
-        kmer_info_list.append(kmer_str_dict[key])
+    # 4.write kmer_str_list and kmer_info_list
     i = 0
     fp.write(str(len(kmer_str_list)) + "\n")
     while i < len(kmer_str_list):
@@ -84,9 +81,8 @@ def load_idx(filename):
     transcript_info.tran_len = [0] * transcript_info.tran_num
     for i in range(transcript_info.tran_num):
         transcript_info.tran_len[i] = int(fp.readline().strip())
-    # 4.read kmer_str_dict and kmer_info_list
+    # 4.read kmer_str_list and kmer_info_list
     kmer_str_list_len = int(fp.readline().strip())
-    print("kmer_num:", kmer_str_list_len)
     for i in range(kmer_str_list_len):
         kmer_str_list.append("")
         kmer_info_list.append("")
@@ -101,13 +97,8 @@ def load_idx(filename):
         kmer_info.sense_in_contig = int(curr_kmer_info[3])
         kmer_info_list[i] = kmer_info
         i = i + 1
-    for i in range(kmer_str_list_len):
-        kmer_str_dict[kmer_str_list[i]] = kmer_info_list[i]
-    kmer_str_list.clear()
-    kmer_info_list.clear()
     # 5.read num of ecs
     ec_map_len = int(fp.readline().strip())
-    print("ecs_num:", ec_map_len)
     for i in range(ec_map_len):
         ec_map.append([])
         ec_inv_dict[i] = []
@@ -132,7 +123,6 @@ def load_idx(filename):
         transcript_info.tran_name[i] = fp.readline().strip()
     # 8.read contigs
     contig_list_len = int(fp.readline().strip())
-    print("contig_num:", contig_list_len)
     for i in range(contig_list_len):
         contig_list.append(0)
         ecs_list.append(0)

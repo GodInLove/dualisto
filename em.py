@@ -1,3 +1,5 @@
+import math
+
 from _class import transcript_info, ec_map, program_stop
 
 

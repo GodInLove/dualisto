@@ -1,4 +1,4 @@
-from _class import kmer_rep, KmerInfo, kmer_str_dict, kmer_twin, contig_fw, contig_bw, contig_list, \
+from _class import kmer_rep, KmerInfo, kmer_str_list, kmer_info_list, kmer_twin, contig_fw, contig_bw, contig_list, \
     Contig, ecs_list, program_stop
 
 fw_step_kmer = ""
@@ -14,13 +14,15 @@ def build_dbg(seqs, k):
             curr_rep = kmer_rep(curr_kmer)
             tmp_kmer_map.add(curr_rep)
 
-    for each_kmer in tmp_kmer_map:
+    tmp_str_map = sorted(list(tmp_kmer_map))
+    for each_kmer in tmp_str_map:
+        kmer_str_list.append(each_kmer)
         kmer_info = KmerInfo()
-        kmer_str_dict[each_kmer] = kmer_info
+        kmer_info_list.append(kmer_info)
 
-    for kmer_key in kmer_str_dict:
-        curr_kmer = kmer_key
-        curr_kmer_info = kmer_str_dict[kmer_key]
+    for i in range(len(kmer_str_list)):
+        curr_kmer = kmer_str_list[i]
+        curr_kmer_info = kmer_info_list[i]
         if curr_kmer_info.contig_id == -1:
             self_loop = 0
             curr_twin = kmer_twin(curr_kmer)
@@ -67,14 +69,15 @@ def build_dbg(seqs, k):
             for j in range(contig_list_len):
                 each_kmer = curr_kmer_list[j]
                 tmp_rep = kmer_rep(each_kmer)
-                if tmp_rep in kmer_str_dict:
-                    kmer_str_dict[tmp_rep].contig_id = curr_contig_id
-                    kmer_str_dict[tmp_rep].pos_in_contig = j
-                    kmer_str_dict[tmp_rep].n_of_kmer_in_contig = contig_list_len
+                if tmp_rep in kmer_str_list:
+                    tmp_index = kmer_str_list.index(tmp_rep)
+                    kmer_info_list[tmp_index].contig_id = curr_contig_id
+                    kmer_info_list[tmp_index].pos_in_contig = j
+                    kmer_info_list[tmp_index].n_of_kmer_in_contig = contig_list_len
                     if tmp_rep == each_kmer:
-                        kmer_str_dict[tmp_rep].sense_in_contig = 1
+                        kmer_info_list[tmp_index].sense_in_contig = 1
                     else:
-                        kmer_str_dict[tmp_rep].sense_in_contig = 0
+                        kmer_info_list[tmp_index].sense_in_contig = 0
                 else:
                     program_stop("contig.py")
                 if j == 0:
@@ -90,14 +93,14 @@ def fwstep(kmer):
     fw_count = 0
     for fw_kmer in contig_fw(kmer):
         curr_rep = kmer_rep(fw_kmer)
-        if curr_rep in kmer_str_dict:
+        if curr_rep in kmer_str_list:
             fw_count = fw_count + 1
             curr_fw = fw_kmer
         if fw_count > 1:
             return 0
     if fw_count != 1:
         return 0
-    bw_count = sum(kmer_rep(tmp) in kmer_str_dict for tmp in contig_bw(curr_fw))
+    bw_count = sum(kmer_rep(tmp) in kmer_str_list for tmp in contig_bw(curr_fw))
     if bw_count > 1:
         return 0
     if bw_count != 1:
