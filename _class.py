@@ -141,6 +141,7 @@ transcript_info = TranscriptInfo()
 ec_map = []
 ecs_list = []
 ec_inv_dict = {}
+kmer_str_dict = {}
 kmer_str_list = []
 kmer_info_list = []
 contig_list = []
