@@ -1,4 +1,4 @@
-from _class import ec_map, kmer_rep, kmer_str_list, program_stop, contig_list, kmer_info_list, \
+from _class import ec_map, kmer_rep, kmer_str_dict, program_stop, contig_list, \
     ContigFindTrans, kmer_twin, Contig, ecs_list, ContigIncludeTrans, ec_inv_dict
 
 contig_find_trans_list = []
@@ -20,9 +20,8 @@ def build_ecs(seqs, k):
             curr_kmer = str(curr_kmer)
             curr_rep = kmer_rep(curr_kmer)
             curr_twin = kmer_twin(curr_kmer)
-            if curr_rep in kmer_str_list:
-                curr_index = kmer_str_list.index(curr_rep)
-                curr_contig_id = kmer_info_list[curr_index].contig_id
+            if curr_rep in kmer_str_dict:
+                curr_contig_id = kmer_str_dict[curr_rep].contig_id
                 curr_contig = contig_list[curr_contig_id]
 
                 kmers_in_contig = []
@@ -33,7 +32,7 @@ def build_ecs(seqs, k):
 
                 contig_find_trans = ContigFindTrans()
                 contig_find_trans.tran_id = i
-                if (curr_kmer == curr_rep) == kmer_info_list[curr_index].sense_in_contig:
+                if (curr_kmer == curr_rep) == kmer_str_dict[curr_rep].sense_in_contig:
                     contig_find_trans.sense_in_tran = 1
                     contig_find_trans.start_in_tran = kmers_in_contig.index(curr_kmer)
                     if kmers_in_contig_len - contig_find_trans.start_in_tran > n_of_kmers_of_seq - j:
@@ -90,9 +89,8 @@ def build_ecs(seqs, k):
             curr_kmer = seq[j: j + k]
             curr_kmer = str(curr_kmer)
             curr_rep = kmer_rep(curr_kmer)
-            if curr_rep in kmer_str_list:
-                curr_index = kmer_str_list.index(curr_rep)
-                curr_kmer_info = kmer_info_list[curr_index]
+            if curr_rep in kmer_str_dict:
+                curr_kmer_info = kmer_str_dict[curr_rep]
                 contig_include_trans = ContigIncludeTrans()
                 contig_include_trans.tran_id = i
                 contig_include_trans.pos_in_tran = j
@@ -147,11 +145,10 @@ def fix_contigs(k):
                     ecs_list.append(-1)
                 for m in range(len(new_contig.seq) - k + 1):
                     curr_kmer_in_contig = new_contig.seq[m: m + k]
-                    if curr_kmer_in_contig in kmer_str_list:
-                        curr_kmer_index = kmer_str_list.index(curr_kmer_in_contig)
-                        kmer_info_list[curr_kmer_index].contig_id = new_contig.id
-                        kmer_info_list[curr_kmer_index].pos_in_contig = m
-                        kmer_info_list[curr_kmer_index].n_of_kmer_in_contig = new_contig.n_of_kmer
+                    if curr_kmer_in_contig in kmer_str_dict:
+                        kmer_str_dict[curr_kmer_in_contig].contig_id = new_contig.id
+                        kmer_str_dict[curr_kmer_in_contig].pos_in_contig = m
+                        kmer_str_dict[curr_kmer_in_contig].n_of_kmer_in_contig = new_contig.n_of_kmer
                     else:
                         program_stop("ecs.py-4")
                 new_trans_info_list = []
