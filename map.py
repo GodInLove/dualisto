@@ -6,13 +6,6 @@ new_ecs = []
 num_read = 0
 
 
-def get_dist(is_fw, kmer_info):
-    if is_fw == kmer_info.sense_in_contig:
-        return kmer_info.n_of_kmer_in_contig - kmer_info.pos_in_contig - 1
-    else:
-        return kmer_info.pos_in_contig
-
-
 def compare_in_v(m, n):
     if m[0].contig_id == n[0].contig_id:
         return m[1] - n[1]
@@ -245,6 +238,13 @@ def map_pair(seq1, seq1_len, seq2, seq2_len, k):
         return p2 - p1
 
 
+def get_dist(is_fw, kmer_info):
+    if is_fw == kmer_info.sense_in_contig:
+        return kmer_info.n_of_kmer_in_contig - kmer_info.pos_in_contig - 1
+    else:
+        return kmer_info.pos_in_contig
+
+
 def match(curr_read, curr_read_len, k):
     # global num_read
     # num_read = num_read + 1
@@ -275,65 +275,65 @@ def match(curr_read, curr_read_len, k):
                     if curr_kit_info.contig_id == kit2_info.contig_id:
                         found2 = 1
                         found2pos = pos + dist
-
-                    if found2:
-                        if found2pos >= curr_read_len - k:
-                            v.append((curr_kit_info, curr_read_len - k))
-                            return v
-                        else:
-                            v.append((curr_kit_info, found2pos))
+                else:
+                    found2 = 1
+                    found2pos = pos
+                if found2:
+                    if found2pos >= curr_read_len - k:
+                        v.append((curr_kit_info, curr_read_len - k))
+                        return v
                     else:
-                        found_middle = 0
-                        if dist > 4:
-                            middle_pos = int((pos + pos2) / 2)
-                            found3pos = pos + dist
-                            kit3 = curr_read[middle_pos:middle_pos + k]
-                            kit3_rep = kmer_rep(kit3)
-                            if kit3_rep in kmer_str_dict:
-                                kit3_info = kmer_str_dict[kit3_rep]
-                                middle_contig_id = kit3_info.contig_id
-                                if middle_contig_id == curr_kit_info.contig_id:
-                                    found_middle = 1
-                                    found3pos = middle_pos
-                                elif middle_contig_id == kit2_info.contig_id:
-                                    found_middle = 1
-                                    found3pos = pos + dist
+                        v.append((curr_kit_info, found2pos))
+                else:
+                    found_middle = 0
+                    if dist > 4:
+                        middle_pos = int((pos + pos2) / 2)
+                        found3pos = pos + dist
+                        kit3 = curr_read[middle_pos:middle_pos + k]
+                        kit3_rep = kmer_rep(kit3)
+                        if kit3_rep in kmer_str_dict:
+                            kit3_info = kmer_str_dict[kit3_rep]
+                            middle_contig_id = kit3_info.contig_id
+                            if middle_contig_id == curr_kit_info.contig_id:
+                                found_middle = 1
+                                found3pos = middle_pos
+                            elif middle_contig_id == kit2_info.contig_id:
+                                found_middle = 1
+                                found3pos = pos + dist
+                            else:
+                                pass
+                            if found_middle:
+                                v.append((kit3_info, found3pos))
+                                if pos2 >= curr_read_len - k:
+                                    return v
                                 else:
-                                    pass
-                                if found_middle:
-                                    v.append((kit3_info, found3pos))
-                                    if pos2 >= curr_read_len - k:
-                                        return v
-                                    else:
-                                        i = pos2
-                                else:
-                                    pass
+                                    i = pos2
                             else:
                                 pass
                         else:
                             pass
-                        if not found_middle:
-                            i = i + 1
-                            again = 1
-                            if again:
-                                j = 0
-                                m = 0
-                                while j < curr_read_len and m < curr_read_len:
-                                    if j == skip:
-                                        j = 0
-                                    if j == 0:
-                                        again_kit = curr_read[m:m + k]
-                                        again_kit_rep = kmer_rep(again_kit)
-                                        if again_kit_rep in kmer_str_dict:
-                                            again_kit_info = kmer_str_dict[again_kit_rep]
-                                            v.append((again_kit_info, m))
-                                    if m == pos2:
-                                        again = 0
-                                        return v
-                                    m = m + 1
-                                    j = j + 1
-                else:
-                    return v
+                    else:
+                        pass
+                    if not found_middle:
+                        i = i + 1
+                        again = 1
+                        if again:
+                            j = 0
+                            m = 0
+                            while j < curr_read_len and m < curr_read_len:
+                                if j == skip:
+                                    j = 0
+                                if j == 0:
+                                    again_kit = curr_read[m:m + k]
+                                    again_kit_rep = kmer_rep(again_kit)
+                                    if again_kit_rep in kmer_str_dict:
+                                        again_kit_info = kmer_str_dict[again_kit_rep]
+                                        v.append((again_kit_info, m))
+                                if m == pos2:
+                                    again = 0
+                                    return v
+                                m = m + 1
+                                j = j + 1
             else:
                 pass
         else:

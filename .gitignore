@@ -1,7 +1,11 @@
 /.idea/*
+.directory
 /test_files/*
 /test_files_2/*
 /test_files_3/*
 /test_files_4/*
 /test_files_5/*
+/test_files_6/*
+/test_files_7/*
+/test_files_8/*
 

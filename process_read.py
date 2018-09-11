@@ -131,6 +131,7 @@ def read_fq_fa_files(args):
                         f_lens[each_tl] = f_lens[each_tl] + 1
                         f_len_goal = f_len_goal - 1
             res.clear()
+            print("counts:", counts)
             end = datetime.datetime.now()
             print("match_ecs:", end - begin)
             begin = datetime.datetime.now()
