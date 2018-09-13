@@ -64,7 +64,9 @@ def kmer_twin(dna_str):
     dna_str = reversed(dna_str)
     new_dna_str = ""
     for base in dna_str:
+        print(base,end="")
         new_dna_str = new_dna_str + base_pair(base)
+    print()
     return new_dna_str
 
 

@@ -1,5 +1,6 @@
 import gzip
 from Bio import SeqIO
+from Bio.Seq import Seq
 
 from _class import transcript_info, MT19937, dna_base, program_stop
 
@@ -29,12 +30,14 @@ def replace_base(seq):
     seq_len = len(seq)
     i = 0
     seq = seq.upper()
+    seq = str(seq)
+    seq.replace("U", "T")
     while i < seq_len:
-        if seq[i] == 'U':
-            seq[i] = 'T'
-        elif seq[i] != 'A' and seq[i] != 'T' and seq[i] != 'C' and seq[i] != 'G':
-            seq[i] = dna_base(MT19937(42).extract_number())
+        if seq[i] != 'A' and seq[i] != 'T' and seq[i] != 'C' and seq[i] != 'G':
+            tmp_base = dna_base(MT19937(42).extract_number())
+            seq.replace(seq[i],tmp_base,1)
         i = i + 1
+    seq = Seq(seq)
     return seq
 
 

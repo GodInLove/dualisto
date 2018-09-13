@@ -145,10 +145,11 @@ def fix_contigs(k):
                     ecs_list.append(-1)
                 for m in range(len(new_contig.seq) - k + 1):
                     curr_kmer_in_contig = new_contig.seq[m: m + k]
-                    if curr_kmer_in_contig in kmer_str_dict:
-                        kmer_str_dict[curr_kmer_in_contig].contig_id = new_contig.id
-                        kmer_str_dict[curr_kmer_in_contig].pos_in_contig = m
-                        kmer_str_dict[curr_kmer_in_contig].n_of_kmer_in_contig = new_contig.n_of_kmer
+                    curr_rep = kmer_rep(curr_kmer_in_contig)
+                    if curr_rep in kmer_str_dict:
+                        kmer_str_dict[curr_rep].contig_id = new_contig.id
+                        kmer_str_dict[curr_rep].pos_in_contig = m
+                        kmer_str_dict[curr_rep].n_of_kmer_in_contig = new_contig.n_of_kmer
                     else:
                         program_stop("ecs.py-4")
                 new_trans_info_list = []
@@ -156,7 +157,7 @@ def fix_contigs(k):
                     if not (each_trans_info.start_in_tran >= break_points[j + 1] or
                             each_trans_info.stop_in_tran <= break_points[j]):
                         new_trans_info = ContigFindTrans()
-                        new_trans_info.sense_in_trans = each_trans_info.sense_in_trans
+                        new_trans_info.sense_in_tran = each_trans_info.sense_in_tran
                         new_trans_info.tran_id = each_trans_info.tran_id
                         new_trans_info.start_in_tran = 0
                         new_trans_info.stop_in_tran = new_contig.n_of_kmer
