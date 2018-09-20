@@ -31,11 +31,11 @@ def replace_base(seq):
     i = 0
     seq = seq.upper()
     seq = str(seq)
-    seq.replace("U", "T")
+    seq = seq.replace("U", "T")
     while i < seq_len:
         if seq[i] != 'A' and seq[i] != 'T' and seq[i] != 'C' and seq[i] != 'G':
             tmp_base = dna_base(MT19937(42).extract_number())
-            seq.replace(seq[i],tmp_base,1)
+            seq = seq.replace(seq[i], tmp_base, 1)
         i = i + 1
     seq = Seq(seq)
     return seq
