@@ -8,6 +8,7 @@ def build_ecs(seqs, k):
     contig_find_trans_dict = {}
     for i in range(len(contig_list)):
         contig_find_trans_dict[i] = []
+    # 遍历基因序列
     for i in range(len(seqs)):
         each_ec = [i]
         ec_map.append(each_ec)
@@ -25,6 +26,7 @@ def build_ecs(seqs, k):
                 curr_contig = contig_list[curr_contig_id]
 
                 kmers_in_contig = []
+                # 遍历curr_contig里面的每一个kmer
                 for m in range(len(curr_contig.seq) - k + 1):
                     curr_kmer_in_contig = curr_contig.seq[m: m + k]
                     kmers_in_contig.append(curr_kmer_in_contig)

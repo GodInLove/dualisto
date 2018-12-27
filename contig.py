@@ -7,6 +7,7 @@ fw_step_kmer = ""
 def build_dbg(seqs, k):
     global fw_step_kmer
     tmp_kmer_map = set()
+    # 把序列打断,得到kmer的集合
     for seq in seqs:
         for i in range(len(seq) - k + 1):
             curr_kmer = seq[i: i + k]
@@ -14,10 +15,12 @@ def build_dbg(seqs, k):
             curr_rep = kmer_rep(curr_kmer)
             tmp_kmer_map.add(curr_rep)
 
+    # 给每一个kmer带上一个可以存储它信息的类
     for each_kmer in tmp_kmer_map:
         kmer_info = KmerInfo()
         kmer_str_dict[each_kmer] = kmer_info
 
+    # 把kmer连起来,找contig
     for kmer_key in kmer_str_dict:
         curr_kmer = kmer_key
         curr_kmer_info = kmer_str_dict[kmer_key]
@@ -29,6 +32,7 @@ def build_dbg(seqs, k):
             fw_step_kmer = curr_kmer
             while fwstep(fw_step_kmer):
                 if fw_step_kmer == curr_kmer:
+                    # 该if判断是否成环
                     self_loop = 1
                     break
                     # pass
@@ -64,6 +68,7 @@ def build_dbg(seqs, k):
             contig = Contig()
             contig.id = curr_contig_id
             contig.n_of_kmer = contig_list_len
+            # 存储kmer的信息
             for j in range(contig_list_len):
                 each_kmer = curr_kmer_list[j]
                 tmp_rep = kmer_rep(each_kmer)
